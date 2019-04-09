@@ -139,7 +139,7 @@ if __name__ == '__main__':
         # 商品字体坐标位置
         goodsCoordinate = arrat[10]
 
-        # 加载背景图片
+        # 加载背景图片 
         backgroundImg = arrat[11]
 
         createShareImg(avatarImg, qrcodeImg, goodsImg, nickname, countWord, imgWidth, headImgSize,
