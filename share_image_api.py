@@ -30,37 +30,22 @@ color = "#000000"
 """
 def createShareImg(avatarImg, qrcodeImg, goodsImg, nickname, countWord,imgWidth,headImgSize,headImgPosition,qrcodeImgSize,qrcodeImgPosition,goodsImgSize,goodsImgPosition,nameSize,nameCoordinate,goodsSize,goodsCoordinate,backgroundImg):
     startTime = time.time()
-    # 加载背景图片
     background = Image.open(backgroundImg)
-    # 加载头像图片
     avatar = Image.open(avatarImg, "r")
-    # 加载二维码图片
     qrcode_img = Image.open(qrcodeImg, "r")
-    # 加载商品图片
     info_img = Image.open(goodsImg, "r")
 
     #改变背景图颜色
     # background = Image.new('RGB', background.size, (178,  34, 34))
 
-    # 将背景图片和圆形头像合成之后当成新的背景图片
     back_img = drawCircleAvatar(avatar, background,headImgSize,headImgPosition)
-
-    # 将二维码图片粘贴在背景图片上
     region = qrcode_img
-    #将二维码图片缩小到180*180像素
     region = region.resize(qrcodeImgSize)
-    #通过坐标左上角2元组的方式将二维码图片放置在背景图像的（230，860）两个位置其结果如下图所示：
     back_img.paste(region, qrcodeImgPosition)
 
-    #将商品图片黏贴在背景图片上
-    #将商品图片缩小到926*337像素
     info_img=info_img.resize(goodsImgSize)
-    #通过坐标左上角2元组的方式将二维码图片放置在背景图像的（77，430）两个位置其结果如下图所示：
     back_img.paste(info_img, goodsImgPosition)
 
-
-    # 绘制用户昵称
-    #计算出字体总长度 求出字体居中开始的位置
     nameStart=int(int(len(nickname)) * nameSize / 2)
     fonts("simsun.ttc",imgWidth,nameStart,nickname,nameSize,back_img,nameCoordinate,1)
 
@@ -77,22 +62,13 @@ def createShareImg(avatarImg, qrcodeImg, goodsImg, nickname, countWord,imgWidth,
 将头像变成圆形绘制在背景图片上，然后将合成的图片对象返回
 """
 def drawCircleAvatar(im, background,headImgSize,headImgPosition):
-    #头像缩放到154*154像素
     im = im.resize(headImgSize)
-    #创建一个新的透明图片
     bigsize = (im.size[0] * 3, im.size[1] * 3)
-    # 遮罩对象
     mask = Image.new('L', bigsize, 0)
-    #创建一个可以在给定图像上绘图的对象。
     draw = ImageDraw.Draw(mask)
-    # 画椭圆的方法  在给定的区域绘制一个椭圆形。
     draw.ellipse((0, 0) + bigsize, fill=255)
-    #图像缩放到和头像图片一致
     mask = mask.resize(im.size, Image.ANTIALIAS)
-    #图像 im 必须是 "RGBA"或者"RGB"，alpha 必须是 "L" 或 "1".
-    #将一张与原图尺寸相同的图片写入到原图片的透明通道之中，但不会影响原图片的正常显示. 可用于信息隐藏. 在做信息隐藏时，需要原图具有透明通道.
     im.putalpha(mask)
-    #通过坐标左上角2元组或4元组的方式将头像图片放置在背景图像的（235，155）两个位置其结果如下图所示：
     background.paste(im, headImgPosition, im)
     return background
 
@@ -100,9 +76,7 @@ def drawCircleAvatar(im, background,headImgSize,headImgPosition):
 内容字体计算 一行显示多少字 自动换行  最后不足一行的居中展示
 """
 def fonts(font,maxWidth,startWidth,string,size,back_img,coordinate,type):
-    #计算出行最大宽度
     lineWidth=int(maxWidth) - int(startWidth)
-    #计算出到第几个字符该换行了
     newLine=int(lineWidth /size)
     new_str=''
     data=[]
@@ -114,17 +88,13 @@ def fonts(font,maxWidth,startWidth,string,size,back_img,coordinate,type):
             new_str+=string[strs]
     data.append([new_str])
 
-    # 设置字体格式  字体大小
     font = ImageFont.truetype(str(font), size)
-    #加载背景图片
     drawImage = ImageDraw.Draw(back_img)
 
     for da in range(len(data)):
         content=str(data[da]).replace("['",'').replace("']",'')
-        #da大于0 说明字体内容一行装不下需要换行 换行需要增加高度 否则字体会重叠在一起
         if da > 0:
             new_height=(size+10) * da
-            #等于1是居中显示 其他是根据设置的坐标显示
             if int(type) == 1:
                 drawImage.text((coordinate[0]-startWidth,coordinate[1]+new_height), u'%s' % content, color, font)
             else:
@@ -159,14 +129,10 @@ def downloadImg(jpg_link,imgName):
 def sharImg():
     if request.method == 'POST':
         try:
-            # 查看目录是否存在，不存在则创建
             if not os.path.isdir(dir):
-                # 生成目录
                 os.makedirs(dir)
 
-            # 时间戳
             times = str(int(time.time()))
-            # 生成新的stp的uuid 时间戳+id
             head_ = uuid.uuid3(HEAD_NAMESPACE, times)
             goods_ = uuid.uuid3(GOODS_NAMESPACE, times)
             qrcode_ = uuid.uuid3(QRCODE_NAMESPACE, times)
