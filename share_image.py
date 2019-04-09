@@ -126,7 +126,7 @@ def template(id):
 
 
 if __name__ == '__main__':
-    # try:
+    try:
         # 头像图片
         avatarImg = "./image/rr.jpg"
         # 二维码图片
@@ -179,7 +179,7 @@ if __name__ == '__main__':
                        goodsImgPosition,
                        nameSize, nameCoordinate, goodsSize, goodsCoordinate, backgroundImg)
         print('执行成功')
-    # except:
-    #     print('服务器错误,请联系管理员')
+    except:
+        print('服务器错误,请联系管理员')
 
 
