@@ -178,7 +178,7 @@ if __name__ == '__main__':
                        headImgPosition, qrcodeImgSize, qrcodeImgPosition, goodsImgSize,
                        goodsImgPosition,
                        nameSize, nameCoordinate, goodsSize, goodsCoordinate, backgroundImg)
-        print('执行成功')
+        print('执行成功.')
     except:
         print('服务器错误,请联系管理员')
 
